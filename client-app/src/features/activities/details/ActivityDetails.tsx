@@ -1,17 +1,18 @@
 import React from 'react'
-import { Button, Icon, Image } from 'semantic-ui-react'
+import { Button, Image } from 'semantic-ui-react'
 import Card from 'semantic-ui-react/dist/commonjs/views/Card'
-import { IActivity } from '../../../app/models/activity'
+import { Activity } from '../../../app/models/activity'
 
 interface IProps {
-    activity: IActivity;
-    setEditMode: (editMode: boolean) => void;
+    activity: Activity;
+    cancelSelectActivity: () => void;
+    openForm: (id: string) => void;
 }
 
-const ActivityDetails: React.FC<IProps> = ({activity, setEditMode}) => {
+export default function ActivityDetails({activity, cancelSelectActivity, openForm} : IProps) {
     return (
         <Card fluid>
-            <Image src={`/assets/categoryImages/${activity.category}.jpg`} wrapped ui={false} />
+            <Image src={`/assets/categoryImages/${activity.category}.jpg`} />
             <Card.Content>
             <Card.Header>{activity.title}</Card.Header>
             <Card.Meta>
@@ -23,12 +24,10 @@ const ActivityDetails: React.FC<IProps> = ({activity, setEditMode}) => {
             </Card.Content>
             <Card.Content extra>
                 <Button.Group width={2}>
-                    <Button onClick={() => setEditMode(true)} basic color='blue' content='Edit' />
-                    <Button basic color='grey' content='Cancel' />
+                    <Button onClick={() => openForm(activity.id)} basic color='blue' content='Edit' />
+                    <Button onClick={cancelSelectActivity} basic color='grey' content='Cancel' />
                 </Button.Group>
             </Card.Content>
         </Card>
     )
 }
-
-export default ActivityDetails

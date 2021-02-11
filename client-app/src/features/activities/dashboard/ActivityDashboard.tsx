@@ -1,45 +1,61 @@
 import React from 'react'
 import { Grid } from 'semantic-ui-react'
-import { IActivity } from '../../../app/models/activity'
+import { Activity } from '../../../app/models/activity'
 import ActivityDetails from '../details/ActivityDetails'
-import { ActivityForm } from '../form/ActivityForm'
+import ActivityForm from '../form/ActivityForm'
 import ActivityList from './ActivityList'
 
 interface IProps {
-    activities: IActivity[];
+    activities: Activity[];
+    selectedActivity: Activity | undefined;
     selectActivity: (id: string) => void;
-    selectedActivity: IActivity | null;
+    cancelSelectActivity: () => void;
     editMode: boolean;
-    setEditMode: (editMode: boolean) => void;
+    openForm: (id: string) => void;
+    closeForm: () => void;
+    createOrEdit: (activity: Activity) => void;
+    deleteActivity: (id: string) => void;
+    submitting: boolean;
 }
 
-const ActivityDashboard: React.FC<IProps> = ({
-    activities, selectActivity, 
+export default function ActivityDashboard({
+    activities, 
+    selectActivity, 
     selectedActivity,
+    cancelSelectActivity,
     editMode,
-    setEditMode
-}) => {
+    openForm,
+    closeForm,
+    createOrEdit,
+    deleteActivity,
+    submitting
+}: IProps) {
     return (
         <Grid>
             <Grid.Column width={10}>
                 <ActivityList 
                     activities = {activities} 
-                    selectActivity={selectActivity} 
+                    selectActivity={selectActivity}
+                    deleteActivity={deleteActivity} 
+                    submitting={submitting}
                 />
             </Grid.Column>
             <Grid.Column width={6}>
                 {selectedActivity && !editMode &&
                     <ActivityDetails 
                         activity = {selectedActivity}
-                        setEditMode={setEditMode}
+                        cancelSelectActivity = {cancelSelectActivity}
+                        openForm={openForm}
                     />
                 }
                 {editMode &&
-                    <ActivityForm />
+                    <ActivityForm 
+                        closeForm={closeForm} 
+                        activity={selectedActivity}
+                        createOrEdit={createOrEdit}
+                        submitting={submitting} />
                 }
             </Grid.Column>
         </Grid>
     )
 }
-
-export default ActivityDashboard
